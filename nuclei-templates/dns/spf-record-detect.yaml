@@ -1,0 +1,26 @@
+id: spf-record-detect
+
+info:
+  name: SPF Record - Detection
+  author: rxerium
+  severity: info
+  description: |
+    An SPF TXT record was detected
+  reference:
+    - https://www.mimecast.com/content/how-to-create-an-spf-txt-record
+  metadata:
+    max-request: 1
+  tags: dns,spf
+dns:
+  - name: "{{FQDN}}"
+    type: TXT
+    matchers:
+      - type: word
+        words:
+          - "v=spf1"
+
+    extractors:
+      - type: regex
+        regex:
+          - "v=spf1(.+)"
+# digest: 490a00463044022051fd16d1a20cc78407591943a744e47d0f63af2678f0f6b9d8a8ed0c8224beb90220439dd7a0b3349db1008743df8de83ab5c2ee6dddde92a6615e2e14ee3e430628:922c64590222798bb761d5b6d8e72950

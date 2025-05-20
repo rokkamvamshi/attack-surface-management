@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - ASM Platform</title>
+    <!-- Make sure these CDN links work -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+        }
+        
+        body {
+            background-color: #f8f9fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+        
+        .help-nav-link {
+            display: block;
+            padding: 12px 15px;
+            color: #212529;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .help-nav-link:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            color: var(--primary-color);
+        }
+        
+        .help-nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .help-section {
+            padding: 30px;
+        }
+        
+        .help-section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .faq-question {
+            background-color: rgba(67, 97, 238, 0.05);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        
+        .faq-answer {
+            display: none;
+            padding: 15px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>ASM Platform
+            </a>
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bars me-1"></i> Menu
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="/view"><i class="fas fa-home me-2"></i>Home</a></li>
+                    <li><a class="dropdown-item" href="/dashboard"><i class="fas fa-chart-line me-2"></i>Dashboard</a></li>
+                    <li><a class="dropdown-item" href="/reports/dashboard"><i class="fas fa-rocket me-2"></i>Visualize The Results</a></li>
+                    <li><a class="dropdown-item" href="/scan"><i class="fas fa-search me-2"></i>New Scan</a></li>
+                    <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="page-title">Help Center</h2>
+        
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <ul class="nav flex-column" id="helpNav" role="tablist">
+                            <li class="nav-item">
+                                <a class="help-nav-link active" id="getting-started-tab" data-bs-toggle="tab" href="#getting-started" role="tab">Getting Started</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="help-nav-link" id="subdomain-discovery-tab" data-bs-toggle="tab" href="#subdomain-discovery" role="tab">Subdomain Discovery</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="help-nav-link" id="vulnerability-scanning-tab" data-bs-toggle="tab" href="#vulnerability-scanning" role="tab">Vulnerability Scanning</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="help-nav-link" id="faqs-tab" data-bs-toggle="tab" href="#faqs" role="tab">FAQs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="help-nav-link" id="contact-support-tab" data-bs-toggle="tab" href="#contact-support" role="tab">Contact Support</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="tab-content">
+                        <!-- Getting Started -->
+                        <div class="tab-pane fade show active" id="getting-started" role="tabpanel">
+                            <div class="help-section">
+                                <h2 class="help-section-title">Getting Started with ASM Platform</h2>
+                                <p>Welcome to the ASM (Attack Surface Management) platform! This guide will help you get started with our tool and begin securing your digital assets.</p>
+                                
+                                <h3>What is Attack Surface Management?</h3>
+                                <p>Attack Surface Management is the process of discovering, cataloging, and monitoring all of your organization's external-facing digital assets.</p>
+                                
+                                <h3>First Steps</h3>
+                                <ol>
+                                    <li><strong>Set up your account:</strong> Complete your profile information.</li>
+                                    <li><strong>Add a domain:</strong> Start by scanning a domain you own.</li>
+                                    <li><strong>Run vulnerability scans:</strong> Check for security issues.</li>
+                                    <li><strong>Review your dashboard:</strong> See an overview of vulnerabilities.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <!-- Subdomain Discovery -->
+                        <div class="tab-pane fade" id="subdomain-discovery" role="tabpanel">
+                            <div class="help-section">
+                                <h2 class="help-section-title">Subdomain Discovery</h2>
+                                <p>Subdomain discovery is the first step in understanding your attack surface. This process identifies all subdomains associated with your main domain.</p>
+                                
+                                <h3>How to Perform a Subdomain Scan</h3>
+                                <ol>
+                                    <li>Navigate to the Home page.</li>
+                                    <li>Enter the root domain you want to scan.</li>
+                                    <li>Click the "Scan Now" button.</li>
+                                    <li>Review the discovered subdomains.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <!-- Vulnerability Scanning -->
+                        <div class="tab-pane fade" id="vulnerability-scanning" role="tabpanel">
+                            <div class="help-section">
+                                <h2 class="help-section-title">Vulnerability Scanning</h2>
+                                <p>After discovering your subdomains, the next step is to scan them for security vulnerabilities.</p>
+                                
+                                <h3>How to Run a Vulnerability Scan</h3>
+                                <ol>
+                                    <li>Go to the "Scan" page from the menu.</li>
+                                    <li>Select a domain and subdomain.</li>
+                                    <li>Choose a vulnerability category.</li>
+                                    <li>Click "Start Scan".</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <!-- FAQs -->
+                        <div class="tab-pane fade" id="faqs" role="tabpanel">
+                            <div class="help-section">
+                                <h2 class="help-section-title">Frequently Asked Questions</h2>
+                                
+                                <div class="faq-question" onclick="toggleAnswer('faq1')">
+                                    <h5>How long does a typical scan take? <i class="fas fa-chevron-down float-end"></i></h5>
+                                    <div class="faq-answer" id="faq1">
+                                        <p>Scan duration depends on several factors:</p>
+                                        <ul>
+                                            <li><strong>Subdomain discovery:</strong> 5-15 minutes for most domains</li>
+                                            <li><strong>Single vulnerability scan:</strong> 2-5 minutes per subdomain</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="faq-question" onclick="toggleAnswer('faq2')">
+                                    <h5>Are the scans intrusive? <i class="fas fa-chevron-down float-end"></i></h5>
+                                    <div class="faq-answer" id="faq2">
+                                        <p>Our scans are designed to be non-intrusive and safe. We do not perform any exploits that could damage your systems.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Support -->
+                        <div class="tab-pane fade" id="contact-support" role="tabpanel">
+                            <div class="help-section">
+                                <h2 class="help-section-title">Contact Support</h2>
+                                <p>Need additional help? Our support team is here to assist you.</p>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <div class="card h-100">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-envelope fa-3x text-primary mb-3"></i>
+                                                <h4>Email Support</h4>
+                                                <p>Get a response within 24 hours.</p>
+                                                <a href="mailto:support@asmplatform.com" class="btn btn-primary mt-3">support@asmplatform.com</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card h-100">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-comments fa-3x text-primary mb-3"></i>
+                                                <h4>Live Chat</h4>
+                                                <p>Available 9am-5pm EST.</p>
+                                                <button class="btn btn-primary mt-3">Start Chat</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Simple JS functions -->
+    <script>
+        // FAQ toggle
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+            } else {
+                answer.style.display = "block";
+            }
+        }
+        
+        // Make sure Bootstrap tabs work
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabLinks = document.querySelectorAll('.help-nav-link');
+            
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all tabs
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Show the corresponding tab content
+                    const tabId = this.getAttribute('href');
+                    document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('show', 'active');
+                    });
+                    document.querySelector(tabId).classList.add('show', 'active');
+                });
+            });
+        });
+    </script>
+    
+    <!-- Make sure Bootstrap JS is loaded -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>
+<script>
+    // Feedback Widget JavaScript
+    // This script creates a floating feedback button that opens a feedback form
+    
+    // Create the feedback widget HTML
+    function createFeedbackWidget() {
+        // Create widget container
+        const widgetContainer = document.createElement('div');
+        widgetContainer.id = 'feedback-widget-container';
+        widgetContainer.style.position = 'fixed';
+        widgetContainer.style.right = '20px';
+        widgetContainer.style.bottom = '20px';
+        widgetContainer.style.zIndex = '9999';
+        
+        // Create trigger button
+        const triggerButton = document.createElement('button');
+        triggerButton.id = 'feedback-trigger';
+        triggerButton.innerHTML = '<i class="fas fa-comment-alt"></i> Feedback';
+        triggerButton.className = 'btn btn-primary';
+        triggerButton.style.borderRadius = '50px';
+        triggerButton.style.padding = '10px 20px';
+        triggerButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        
+        // Create feedback modal
+        const modalHtml = `
+        <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="feedbackModalLabel">Share Your Feedback</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="feedbackForm">
+                            <div class="mb-3">
+                                <label class="form-label">How would you rate your experience?</label>
+                                <div class="rating-container text-center mb-3">
+                                    <div class="btn-group" role="group" aria-label="Rating">
+                                        <input type="radio" class="btn-check" name="rating" id="rating1" value="1" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating1">1</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating2" value="2" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating2">2</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating3" value="3" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating3">3</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating4" value="4" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating4">4</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating5" value="5" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating5">5</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="feedbackType" class="form-label">What type of feedback do you have?</label>
+                                <select class="form-select" id="feedbackType" required>
+                                    <option value="" selected disabled>Select an option</option>
+                                    <option value="bug">Bug Report</option>
+                                    <option value="feature">Feature Request</option>
+                                    <option value="usability">Usability Issue</option>
+                                    <option value="praise">Praise</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="feedbackText" class="form-label">Your feedback</label>
+                                <textarea class="form-control" id="feedbackText" rows="4" placeholder="Please describe your feedback in detail..." required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="contactConsent">
+                                    <label class="form-check-label" for="contactConsent">
+                                        I'm OK with being contacted about this feedback
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3" id="emailField" style="display: none;">
+                                <label for="contactEmail" class="form-label">Email (optional)</label>
+                                <input type="email" class="form-control" id="contactEmail" placeholder="your@email.com">
+                            </div>
+                            <input type="hidden" id="pageUrl" value="${window.location.href}">
+                            <input type="hidden" id="userAgent" value="${navigator.userAgent}">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="submitFeedback">Submit Feedback</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        // Add trigger button to container
+        widgetContainer.appendChild(triggerButton);
+        
+        // Add container to body
+        document.body.appendChild(widgetContainer);
+        
+        // Set up event listeners
+        setupFeedbackEvents();
+    }
+    
+    // Set up the event listeners for the feedback widget
+    function setupFeedbackEvents() {
+        // Trigger button opens modal
+        document.getElementById('feedback-trigger').addEventListener('click', function() {
+            const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+            feedbackModal.show();
+        });
+        
+        // Show/hide email field based on consent checkbox
+        document.getElementById('contactConsent').addEventListener('change', function() {
+            document.getElementById('emailField').style.display = this.checked ? 'block' : 'none';
+        });
+        
+        // Handle form submission
+        document.getElementById('submitFeedback').addEventListener('click', function() {
+            submitFeedback();
+        });
+    }
+    
+    // Submit feedback to the server
+    function submitFeedback() {
+        const form = document.getElementById('feedbackForm');
+        
+        // Get selected rating
+        let rating = document.querySelector('input[name="rating"]:checked');
+        rating = rating ? rating.value : null;
+        
+        // Basic validation
+        const feedbackType = document.getElementById('feedbackType').value;
+        const feedbackText = document.getElementById('feedbackText').value;
+        
+        if (!feedbackType || !feedbackText) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        // Prepare data for submission
+        const feedbackData = {
+            rating: rating,
+            type: feedbackType,
+            feedback: feedbackText,
+            contact_consent: document.getElementById('contactConsent').checked,
+            email: document.getElementById('contactEmail').value,
+            page_url: document.getElementById('pageUrl').value,
+            user_agent: document.getElementById('userAgent').value,
+            timestamp: new Date().toISOString()
+        };
+        
+        // Send to server
+        fetch('/submit-feedback/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken() // Get CSRF token from cookies
+            },
+            body: JSON.stringify(feedbackData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Hide modal
+            bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
+            
+            // Show success message
+            showFeedbackSuccess();
+            
+            // Reset form
+            form.reset();
+            document.getElementById('emailField').style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error submitting feedback:', error);
+            alert('There was an error submitting your feedback. Please try again later.');
+        });
+    }
+    
+    // Show success message after submitting feedback
+    function showFeedbackSuccess() {
+        // Create toast notification
+        const toastHtml = `
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+            <div id="feedbackToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-check-circle me-2"></i>Thank you for your feedback!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        `;
+        
+        // Add toast to body if it doesn't exist
+        if (!document.getElementById('feedbackToast')) {
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+        }
+        
+        // Show the toast
+        const toastEl = document.getElementById('feedbackToast');
+        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
+    }
+    
+    // Helper function to get CSRF token from cookies
+    function getCsrfToken() {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+        
+        return cookieValue || '';
+    }
+    
+    // Initialize the feedback widget when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        createFeedbackWidget();
+    });
+    </script>
+    
+    

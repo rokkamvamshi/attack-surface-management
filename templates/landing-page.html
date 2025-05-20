@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attack Surface Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --info-color: #4361ee;
+            --card-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-scrolled {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 10px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 28px;
+            color: white;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        /* Hero section */
+        .hero {
+            background: linear-gradient(rgba(24, 24, 37, 0.8), rgba(24, 24, 37, 0.8)), url('../static/images/hero-bg.jpeg') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            padding: 180px 20px;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.6), rgba(72, 149, 239, 0.6));
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+        }
+        
+        /* Features section */
+        .features {
+            padding: 100px 0;
+            background-color: var(--light-color);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(72, 149, 239, 0.1));
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover {
+            border-radius: 15px;
+            border: none;
+            background: white;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0,)
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 40px 25px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            z-index: 1;
+            height: 100%;
+        }
+        .card-hover:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(67, 97, 238, 0.2);
+        }
+        
+        .card-hover:hover:before {
+            opacity: 0.05;
+        }
+        
+        .card-hover:hover .feature-icon {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
+        }
+        
+        .card-hover:hover h4 {
+            color: var(--primary-color);
+        }
+        
+        .card-hover h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover p {
+            color: #6c757d;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        /* Testimonials section */
+        .testimonials {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .testimonial-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            object-fit: cover;
+            border: 5px solid #f8f9fa;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            color: #6c757d;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .testimonial-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .testimonial-role {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+        
+        /* CTA section */
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .cta-subtitle {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        
+        .cta-btn-white {
+            background: white;
+            color: var(--primary-color);
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-btn-white:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+            background: var(--light-color);
+        }
+        
+        /* Footer */
+        footer {
+            background: #212529;
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .footer-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+        
+        .footer-links h5 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-links h5:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--accent-color);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        
+        .social-icons {
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary-color);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 30px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .feature-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+            
+            .cta-btn, .cta-btn-white {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>ASM
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about-us">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="signup">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content fade-in-up">
+            <h1>Uncover Your Attack Surface. <br>Stay Secure.</h1>
+            <p>Automated security scanning for your domains with actionable insights to protect your digital assets.</p>
+            <a href="#features" class="btn cta-btn pulse">
+                <i class="fas fa-rocket me-2"></i>Get Started for Free
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title fade-in-up">
+                <h2>Key Features</h2>
+                <p>Discover how our platform helps secure your digital presence</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card-hover fade-in-up">
+                        <div class="feature-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <h4>Subdomain Enumeration</h4>
+                        <p>Discover all subdomains associated with your domain to build a comprehensive view of your attack surface.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-hover fade-in-up" style="animation-delay: 0.2s;">
+                        <div class="feature-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h4>Vulnerability Detection</h4>
+                        <p>Identify critical security threats such as XSS, SQL Injection, RCE, and misconfigurations across your assets.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-hover fade-in-up" style="animation-delay: 0.4s;">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Comprehensive Reporting</h4>
+                        <p>Get detailed insights with prioritized vulnerabilities and actionable remediation steps.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-4 mt-4">
+                <div class="col-md-4">
+                    <div class="card-hover fade-in-up">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h4>Fast Scanning</h4>
+                        <p>Our optimized scanning engine provides quick results while maintaining high accuracy.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-hover fade-in-up" style="animation-delay: 0.2s;">
+                        <div class="feature-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h4>Secure by Design</h4>
+                        <p>Your data privacy is important to us. All scans are performed securely with your information protected.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-hover fade-in-up" style="animation-delay: 0.4s;">
+                        <div class="feature-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h4>Historical Tracking</h4>
+                        <p>Monitor your security posture over time with historical scan results and vulnerability trends.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title fade-in-up">
+                <h2>What Our Users Say</h2>
+                <p>Hear from security professionals who use our platform</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card fade-in-up">
+                        <img src="../static/images/ceo.jpg" alt="John Doe" class="testimonial-img">
+                        <p class="testimonial-text">"This platform has transformed how we approach security testing. We've identified vulnerabilities we didn't even know existed."</p>
+                        <h5 class="testimonial-name">John Doe</h5>
+                        <p class="testimonial-role">Security Engineer</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card fade-in-up" style="animation-delay: 0.2s;">
+                        <img src="../static/images/ciso.jpg" alt="Jane Smith" class="testimonial-img">
+                        <p class="testimonial-text">"As a CISO, I need comprehensive security solutions. This platform provides the depth and breadth we require for enterprise security."</p>
+                        <h5 class="testimonial-name">Jane Smith</h5>
+                        <p class="testimonial-role">Chief Information Security Officer</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card fade-in-up" style="animation-delay: 0.4s;">
+                        <img src="../static/images/designer.jpg" alt="Mark Johnson" class="testimonial-img">
+                        <p class="testimonial-text">"The intuitive dashboard and detailed reporting make it easy to prioritize security issues and demonstrate progress to stakeholders."</p>
+                        <h5 class="testimonial-name">Mark Johnson</h5>
+                        <p class="testimonial-role">IT Director</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title fade-in-up">Ready to Secure Your Digital Assets?</h2>
+            <p class="cta-subtitle fade-in-up">Join thousands of security-conscious organizations using our platform.</p>
+            <a href="signup" class="btn cta-btn-white fade-in-up">
+                <i class="fas fa-user-plus me-2"></i>Sign Up Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <a href="#" class="footer-logo">
+                        <i class="fas fa-shield-alt me-2"></i>ASM
+                    </a>
+                    <p class="footer-text">Automated security scanning for your domains with actionable insights to protect your digital assets.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6 mb-4">
+                    <div class="footer-links">
+                        <h5>Company</h5>
+                        <ul>
+                            <li><a href="about-us">About Us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6 mb-4">
+                    <div class="footer-links">
+                        <h5>Product</h5>
+                        <ul>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#">Pricing</a></li>
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">API</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6 mb-4">
+                    <div class="footer-links">
+                        <h5>Resources</h5>
+                        <ul>
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Community</a></li>
+                            <li><a href="#">Webinars</a></li>
+                            <li><a href="#">Partners</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6 mb-4">
+                    <div class="footer-links">
+                        <h5>Legal</h5>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Security</a></li>
+                            <li><a href="#">Compliance</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center copyright">
+                <p>&copy; 2025 Attack Surface Management | All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+<script>
+    // Feedback Widget JavaScript
+    // This script creates a floating feedback button that opens a feedback form
+    
+    // Create the feedback widget HTML
+    function createFeedbackWidget() {
+        // Create widget container
+        const widgetContainer = document.createElement('div');
+        widgetContainer.id = 'feedback-widget-container';
+        widgetContainer.style.position = 'fixed';
+        widgetContainer.style.right = '20px';
+        widgetContainer.style.bottom = '20px';
+        widgetContainer.style.zIndex = '9999';
+        
+        // Create trigger button
+        const triggerButton = document.createElement('button');
+        triggerButton.id = 'feedback-trigger';
+        triggerButton.innerHTML = '<i class="fas fa-comment-alt"></i> Feedback';
+        triggerButton.className = 'btn btn-primary';
+        triggerButton.style.borderRadius = '50px';
+        triggerButton.style.padding = '10px 20px';
+        triggerButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        
+        // Create feedback modal
+        const modalHtml = `
+        <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="feedbackModalLabel">Share Your Feedback</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="feedbackForm">
+                            <div class="mb-3">
+                                <label class="form-label">How would you rate your experience?</label>
+                                <div class="rating-container text-center mb-3">
+                                    <div class="btn-group" role="group" aria-label="Rating">
+                                        <input type="radio" class="btn-check" name="rating" id="rating1" value="1" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating1">1</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating2" value="2" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating2">2</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating3" value="3" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating3">3</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating4" value="4" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating4">4</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating5" value="5" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating5">5</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="feedbackType" class="form-label">What type of feedback do you have?</label>
+                                <select class="form-select" id="feedbackType" required>
+                                    <option value="" selected disabled>Select an option</option>
+                                    <option value="bug">Bug Report</option>
+                                    <option value="feature">Feature Request</option>
+                                    <option value="usability">Usability Issue</option>
+                                    <option value="praise">Praise</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="feedbackText" class="form-label">Your feedback</label>
+                                <textarea class="form-control" id="feedbackText" rows="4" placeholder="Please describe your feedback in detail..." required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="contactConsent">
+                                    <label class="form-check-label" for="contactConsent">
+                                        I'm OK with being contacted about this feedback
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3" id="emailField" style="display: none;">
+                                <label for="contactEmail" class="form-label">Email (optional)</label>
+                                <input type="email" class="form-control" id="contactEmail" placeholder="your@email.com">
+                            </div>
+                            <input type="hidden" id="pageUrl" value="${window.location.href}">
+                            <input type="hidden" id="userAgent" value="${navigator.userAgent}">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="submitFeedback">Submit Feedback</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        // Add trigger button to container
+        widgetContainer.appendChild(triggerButton);
+        
+        // Add container to body
+        document.body.appendChild(widgetContainer);
+        
+        // Set up event listeners
+        setupFeedbackEvents();
+    }
+    
+    // Set up the event listeners for the feedback widget
+    function setupFeedbackEvents() {
+        // Trigger button opens modal
+        document.getElementById('feedback-trigger').addEventListener('click', function() {
+            const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+            feedbackModal.show();
+        });
+        
+        // Show/hide email field based on consent checkbox
+        document.getElementById('contactConsent').addEventListener('change', function() {
+            document.getElementById('emailField').style.display = this.checked ? 'block' : 'none';
+        });
+        
+        // Handle form submission
+        document.getElementById('submitFeedback').addEventListener('click', function() {
+            submitFeedback();
+        });
+    }
+    
+    // Submit feedback to the server
+    function submitFeedback() {
+        const form = document.getElementById('feedbackForm');
+        
+        // Get selected rating
+        let rating = document.querySelector('input[name="rating"]:checked');
+        rating = rating ? rating.value : null;
+        
+        // Basic validation
+        const feedbackType = document.getElementById('feedbackType').value;
+        const feedbackText = document.getElementById('feedbackText').value;
+        
+        if (!feedbackType || !feedbackText) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        // Prepare data for submission
+        const feedbackData = {
+            rating: rating,
+            type: feedbackType,
+            feedback: feedbackText,
+            contact_consent: document.getElementById('contactConsent').checked,
+            email: document.getElementById('contactEmail').value,
+            page_url: document.getElementById('pageUrl').value,
+            user_agent: document.getElementById('userAgent').value,
+            timestamp: new Date().toISOString()
+        };
+        
+        // Send to server
+        fetch('/submit-feedback/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken() // Get CSRF token from cookies
+            },
+            body: JSON.stringify(feedbackData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Hide modal
+            bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
+            
+            // Show success message
+            showFeedbackSuccess();
+            
+            // Reset form
+            form.reset();
+            document.getElementById('emailField').style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error submitting feedback:', error);
+            alert('There was an error submitting your feedback. Please try again later.');
+        });
+    }
+    
+    // Show success message after submitting feedback
+    function showFeedbackSuccess() {
+        // Create toast notification
+        const toastHtml = `
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+            <div id="feedbackToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-check-circle me-2"></i>Thank you for your feedback!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        `;
+        
+        // Add toast to body if it doesn't exist
+        if (!document.getElementById('feedbackToast')) {
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+        }
+        
+        // Show the toast
+        const toastEl = document.getElementById('feedbackToast');
+        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
+    }
+    
+    // Helper function to get CSRF token from cookies
+    function getCsrfToken() {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+        
+        return cookieValue || '';
+    }
+    
+    // Initialize the feedback widget when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        createFeedbackWidget();
+    });
+    </script>

@@ -1,0 +1,50 @@
+<!-- debug_tools.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Path Checker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Path Checker</h1>
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Path Status</h5>
+                <ul class="list-group" id="pathStatus">
+                    <li class="list-group-item">Checking paths...</li>
+                </ul>
+            </div>
+        </div>
+        <button class="btn btn-primary mt-3" id="checkPaths">Check Paths</button>
+    </div>
+    
+    <script>
+        document.getElementById('checkPaths').addEventListener('click', function() {
+            fetch('/check_paths/', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const statusList = document.getElementById('pathStatus');
+                statusList.innerHTML = '';
+                
+                for (const path in data) {
+                    const item = document.createElement('li');
+                    item.className = `list-group-item ${data[path] ? 'list-group-item-success' : 'list-group-item-danger'}`;
+                    item.textContent = `${path}: ${data[path] ? 'Available' : 'Not Found'}`;
+                    statusList.appendChild(item);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error checking paths');
+            });
+        });
+    </script>
+</body>
+</html>

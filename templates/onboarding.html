@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to ASM Platform - Onboarding</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --card-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: #f8f9fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-color);
+        }
+        
+        .onboarding-container {
+            max-width: 1000px;
+            margin: 50px auto;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .step.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .step.completed {
+            background-color: #6ce675;
+            color: white;
+        }
+        
+        .step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 30px;
+            height: 2px;
+            background-color: #e9ecef;
+            transform: translateY(-50%);
+        }
+        
+        .step.completed:not(:last-child):after {
+            background-color: #6ce675;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            padding: 30px;
+        }
+        
+        .tab-content {
+            padding: 20px 0;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .welcome-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(67, 97, 238, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(67, 97, 238, 0.2);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .nav-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn-skip {
+            color: #6c757d;
+            background: none;
+            border: none;
+            padding: 12px 25px;
+            font-weight: 600;
+        }
+        
+        .btn-skip:hover {
+            color: var(--dark-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="onboarding-container">
+        <div class="card">
+            <div class="step-indicator">
+                <div class="step active" id="step1-indicator">1</div>
+                <div class="step" id="step2-indicator">2</div>
+                <div class="step" id="step3-indicator">3</div>
+                <div class="step" id="step4-indicator">4</div>
+            </div>
+            
+            <div class="tab-content">
+                <!-- Step 1: Welcome -->
+                <div class="tab-pane active" id="step1">
+                    <div class="text-center mb-5">
+                        <i class="fas fa-shield-alt welcome-icon"></i>
+                        <h2>Welcome to ASM Platform!</h2>
+                        <p class="lead">Let's get you set up to discover and secure your attack surface.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 offset-md-3">
+                            <p>This quick tour will help you understand how our platform works and how to get the most out of it. Here's what you'll learn:</p>
+                            <ul class="mt-4">
+                                <li class="mb-2">How to discover your subdomains</li>
+                                <li class="mb-2">How to scan for security vulnerabilities</li>
+                                <li class="mb-2">How to interpret scan results</li>
+                                <li class="mb-2">How to set up notifications and monitoring</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Subdomain Discovery -->
+                <div class="tab-pane" id="step2">
+                    <div class="text-center mb-5">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <h2>Discover Your Attack Surface</h2>
+                        <p class="lead">First, you'll need to identify your digital assets.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                            <p>The first step in securing your organization is understanding what you need to protect:</p>
+                            <div class="card bg-light mt-4 mb-4">
+                                <div class="card-body">
+                                    <h5><i class="fas fa-lightbulb text-primary me-2"></i>How to perform a subdomain scan:</h5>
+                                    <ol>
+                                        <li>Navigate to the Home page</li>
+                                        <li>Enter your root domain (e.g., example.com)</li>
+                                        <li>Click "Scan Now"</li>
+                                        <li>Wait for the scan to complete - this may take a few minutes</li>
+                                        <li>Review the discovered subdomains</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <p>The platform will find all subdomains associated with your main domain, giving you a complete picture of your digital footprint.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Vulnerability Scanning -->
+                <div class="tab-pane" id="step3">
+                    <div class="text-center mb-5">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h2>Scan for Vulnerabilities</h2>
+                        <p class="lead">Find security issues across your attack surface.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                            <p>After discovering your subdomains, it's time to scan them for security vulnerabilities:</p>
+                            <div class="card bg-light mt-4 mb-4">
+                                <div class="card-body">
+                                    <h5><i class="fas fa-lightbulb text-primary me-2"></i>How to perform a vulnerability scan:</h5>
+                                    <ol>
+                                        <li>Go to the Scan page</li>
+                                        <li>Select a domain from the dropdown</li>
+                                        <li>Select a subdomain to scan</li>
+                                        <li>Choose which vulnerabilities to check for</li>
+                                        <li>Click "Start Scan"</li>
+                                        <li>View results in your dashboard</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <p>Vulnerability scans can identify issues like XSS, SQL injection, misconfigurations, and more. They're essential for maintaining your security posture.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Dashboard & Reporting -->
+                <div class="tab-pane" id="step4">
+                    <div class="text-center mb-5">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h2>Understand Your Results</h2>
+                        <p class="lead">Interpret findings and take action.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                            <p>Your security dashboard provides an overview of all security findings:</p>
+                            <div class="card bg-light mt-4 mb-4">
+                                <div class="card-body">
+                                    <h5><i class="fas fa-lightbulb text-primary me-2"></i>Dashboard Features:</h5>
+                                    <ul>
+                                        <li>Summary statistics of your security posture</li>
+                                        <li>Breakdown of vulnerabilities by severity</li>
+                                        <li>Detailed reports for each finding</li>
+                                        <li>Filtering options to focus on specific issues</li>
+                                        <li>Historical tracking of your security status</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p>Your journey to a more secure digital footprint begins now. Let's get started!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-steps">
+                <button class="btn btn-skip" id="skipBtn">Skip Tour</button>
+                <div>
+                    <button class="btn btn-outline-secondary me-2" id="prevBtn" style="display:none">Previous</button>
+                    <button class="btn btn-primary" id="nextBtn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Form to mark onboarding as complete -->
+    <form id="completeForm" method="post" action="" style="display:none;">
+        {% csrf_token %}
+        <input type="hidden" name="complete_onboarding" value="true">
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const steps = ["step1", "step2", "step3", "step4"];
+            let currentStep = 0;
+            
+            const nextBtn = document.getElementById("nextBtn");
+            const prevBtn = document.getElementById("prevBtn");
+            const skipBtn = document.getElementById("skipBtn");
+            const completeForm = document.getElementById("completeForm");
+            
+            // Functions to navigate between steps
+            function showStep(stepIndex) {
+                // Hide all steps
+                steps.forEach((step, index) => {
+                    document.getElementById(step).classList.remove("active");
+                    document.getElementById(step + "-indicator").classList.remove("active", "completed");
+                });
+                
+                // Show current step
+                document.getElementById(steps[stepIndex]).classList.add("active");
+                document.getElementById(steps[stepIndex] + "-indicator").classList.add("active");
+                
+                // Mark completed steps
+                for (let i = 0; i < stepIndex; i++) {
+                    document.getElementById(steps[i] + "-indicator").classList.add("completed");
+                }
+                
+                // Update button states
+                if (stepIndex === 0) {
+                    prevBtn.style.display = "none";
+                } else {
+                    prevBtn.style.display = "inline-block";
+                }
+                
+                if (stepIndex === steps.length - 1) {
+                    nextBtn.textContent = "Get Started";
+                } else {
+                    nextBtn.textContent = "Next";
+                }
+                
+                currentStep = stepIndex;
+            }
+            
+            // Event listeners
+            nextBtn.addEventListener("click", function() {
+                if (currentStep < steps.length - 1) {
+                    showStep(currentStep + 1);
+                } else {
+                    // On the last step, submit the form to complete onboarding
+                    completeForm.submit();
+                }
+            });
+            
+            prevBtn.addEventListener("click", function() {
+                if (currentStep > 0) {
+                    showStep(currentStep - 1);
+                }
+            });
+            
+            skipBtn.addEventListener("click", function() {
+                completeForm.submit();
+            });
+            
+            // Initialize
+            showStep(0);
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<script>
+    // Feedback Widget JavaScript
+    // This script creates a floating feedback button that opens a feedback form
+    
+    // Create the feedback widget HTML
+    function createFeedbackWidget() {
+        // Create widget container
+        const widgetContainer = document.createElement('div');
+        widgetContainer.id = 'feedback-widget-container';
+        widgetContainer.style.position = 'fixed';
+        widgetContainer.style.right = '20px';
+        widgetContainer.style.bottom = '20px';
+        widgetContainer.style.zIndex = '9999';
+        
+        // Create trigger button
+        const triggerButton = document.createElement('button');
+        triggerButton.id = 'feedback-trigger';
+        triggerButton.innerHTML = '<i class="fas fa-comment-alt"></i> Feedback';
+        triggerButton.className = 'btn btn-primary';
+        triggerButton.style.borderRadius = '50px';
+        triggerButton.style.padding = '10px 20px';
+        triggerButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        
+        // Create feedback modal
+        const modalHtml = `
+        <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="feedbackModalLabel">Share Your Feedback</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="feedbackForm">
+                            <div class="mb-3">
+                                <label class="form-label">How would you rate your experience?</label>
+                                <div class="rating-container text-center mb-3">
+                                    <div class="btn-group" role="group" aria-label="Rating">
+                                        <input type="radio" class="btn-check" name="rating" id="rating1" value="1" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating1">1</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating2" value="2" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating2">2</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating3" value="3" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating3">3</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating4" value="4" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating4">4</label>
+                                        
+                                        <input type="radio" class="btn-check" name="rating" id="rating5" value="5" autocomplete="off">
+                                        <label class="btn btn-outline-warning" for="rating5">5</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="feedbackType" class="form-label">What type of feedback do you have?</label>
+                                <select class="form-select" id="feedbackType" required>
+                                    <option value="" selected disabled>Select an option</option>
+                                    <option value="bug">Bug Report</option>
+                                    <option value="feature">Feature Request</option>
+                                    <option value="usability">Usability Issue</option>
+                                    <option value="praise">Praise</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="feedbackText" class="form-label">Your feedback</label>
+                                <textarea class="form-control" id="feedbackText" rows="4" placeholder="Please describe your feedback in detail..." required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="contactConsent">
+                                    <label class="form-check-label" for="contactConsent">
+                                        I'm OK with being contacted about this feedback
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3" id="emailField" style="display: none;">
+                                <label for="contactEmail" class="form-label">Email (optional)</label>
+                                <input type="email" class="form-control" id="contactEmail" placeholder="your@email.com">
+                            </div>
+                            <input type="hidden" id="pageUrl" value="${window.location.href}">
+                            <input type="hidden" id="userAgent" value="${navigator.userAgent}">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="submitFeedback">Submit Feedback</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        // Add trigger button to container
+        widgetContainer.appendChild(triggerButton);
+        
+        // Add container to body
+        document.body.appendChild(widgetContainer);
+        
+        // Set up event listeners
+        setupFeedbackEvents();
+    }
+    
+    // Set up the event listeners for the feedback widget
+    function setupFeedbackEvents() {
+        // Trigger button opens modal
+        document.getElementById('feedback-trigger').addEventListener('click', function() {
+            const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+            feedbackModal.show();
+        });
+        
+        // Show/hide email field based on consent checkbox
+        document.getElementById('contactConsent').addEventListener('change', function() {
+            document.getElementById('emailField').style.display = this.checked ? 'block' : 'none';
+        });
+        
+        // Handle form submission
+        document.getElementById('submitFeedback').addEventListener('click', function() {
+            submitFeedback();
+        });
+    }
+    
+    // Submit feedback to the server
+    function submitFeedback() {
+        const form = document.getElementById('feedbackForm');
+        
+        // Get selected rating
+        let rating = document.querySelector('input[name="rating"]:checked');
+        rating = rating ? rating.value : null;
+        
+        // Basic validation
+        const feedbackType = document.getElementById('feedbackType').value;
+        const feedbackText = document.getElementById('feedbackText').value;
+        
+        if (!feedbackType || !feedbackText) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        // Prepare data for submission
+        const feedbackData = {
+            rating: rating,
+            type: feedbackType,
+            feedback: feedbackText,
+            contact_consent: document.getElementById('contactConsent').checked,
+            email: document.getElementById('contactEmail').value,
+            page_url: document.getElementById('pageUrl').value,
+            user_agent: document.getElementById('userAgent').value,
+            timestamp: new Date().toISOString()
+        };
+        
+        // Send to server
+        fetch('/submit-feedback/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken() // Get CSRF token from cookies
+            },
+            body: JSON.stringify(feedbackData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Hide modal
+            bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
+            
+            // Show success message
+            showFeedbackSuccess();
+            
+            // Reset form
+            form.reset();
+            document.getElementById('emailField').style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error submitting feedback:', error);
+            alert('There was an error submitting your feedback. Please try again later.');
+        });
+    }
+    
+    // Show success message after submitting feedback
+    function showFeedbackSuccess() {
+        // Create toast notification
+        const toastHtml = `
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+            <div id="feedbackToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-check-circle me-2"></i>Thank you for your feedback!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        `;
+        
+        // Add toast to body if it doesn't exist
+        if (!document.getElementById('feedbackToast')) {
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+        }
+        
+        // Show the toast
+        const toastEl = document.getElementById('feedbackToast');
+        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
+    }
+    
+    // Helper function to get CSRF token from cookies
+    function getCsrfToken() {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+        
+        return cookieValue || '';
+    }
+    
+    // Initialize the feedback widget when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        createFeedbackWidget();
+    });
+    </script>
+

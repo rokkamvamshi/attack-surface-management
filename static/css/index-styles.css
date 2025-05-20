@@ -1,0 +1,111 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    width: 100px;
+}
+
+.header-buttons button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.header-buttons button:hover {
+    background-color: #0056b3;
+}
+
+/* Product Information Section */
+.info-section {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #fff;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.info-section p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Testimonials Section */
+.testimonials-section {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.testimonials-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+/* Carousel Styling */
+.carousel {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    animation: scroll 15s linear infinite;
+}
+
+.testimonial {
+    min-width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.testimonial p {
+    font-size: 1.1em;
+    color: #333;
+}
+
+.testimonial span {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #007BFF;
+}
+
+/* Keyframes for Carousel Animation */
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}

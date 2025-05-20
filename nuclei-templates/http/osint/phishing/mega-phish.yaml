@@ -1,0 +1,37 @@
+id: mega-phish
+
+info:
+  name: mega phishing Detection
+  author: rxerium
+  severity: info
+  description: |
+    A mega phishing website was detected
+  reference:
+    - https://mega.io
+  metadata:
+    max-request: 1
+  tags: phishing,mega,osint
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    host-redirects: true
+    max-redirects: 2
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - 'Home - MEGA'
+          - 'Secure and private cloud storage for everyone. Store and share files, chat, meet, back up, sync, and more.'
+        condition: and
+
+      - type: status
+        status:
+          - 200
+
+      - type: dsl
+        dsl:
+          - '!contains(host,"mega.io")'
+# digest: 4b0a00483046022100fa140b4f98e6b4a3646433d5ccd6ed5e68f896cee4e2e1868b07be31e5594146022100ca92c1ac073685ef5387e7646cbc213a5ec1f1954a0ebd04e5631cc80cf521af:922c64590222798bb761d5b6d8e72950

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Attack Surface Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --info-color: #4361ee;
+            --card-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: #f8f9fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-color);
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+        
+        .container {
+            max-width: 1200px;
+            padding: 30px 15px;
+        }
+        
+        .about-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .about-header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 25px;
+            font-size: 2.8rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .about-header h1:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+        
+        .about-header p {
+            font-size: 1.2rem;
+            color: #6c757d;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        .mission-section {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 40px;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mission-section:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        }
+        
+        .mission-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .mission-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        .team-section {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .team-section h2 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .team-section h2:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+        
+        .team-lead-container {
+            margin-bottom: 40px;
+        }
+        
+        .team-member {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            border: 5px solid #f8f9fa;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+        
+        .team-member:hover img {
+            transform: scale(1.1);
+            border-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .team-member h3 {
+            margin-top: 20px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.3rem;
+        }
+        
+        .team-member p {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .linkedin-icon {
+            display: block;
+            position: static;
+            transform: none;
+            font-size: inherit;
+            color: inherit;
+        }
+        
+        .team-lead-card {
+            max-width: 350px;
+            margin: 0 auto;
+        }
+        
+        .back-button {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
+        }
+        
+        .back-button:hover {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(67, 97, 238, 0.3);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 40px;
+            margin-right: 15px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 30px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @media (max-width: 768px) {
+            .mission-section {
+                padding: 30px;
+            }
+            
+            .team-member {
+                padding: 20px 15px;
+            }
+            
+            .team-member img {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .about-header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>ASM Platform
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/about-us">
+                            <i class="fas fa-users me-1"></i> About Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup">
+                            <i class="fas fa-user-plus me-1"></i> Sign Up
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="logo-container slide-in">
+                <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                <div class="logo-text ms-2">ASM Platform</div>
+            </div>
+            <a href="/" class="back-button slide-in">
+                <i class="fas fa-arrow-left me-2"></i>Back to Home
+            </a>
+        </div>
+
+        <!-- About Header -->
+        <div class="about-header fade-in-up">
+            <h1>About Our Platform</h1>
+            <p>Discover how we're revolutionizing attack surface management for organizations of all sizes.</p>
+        </div>
+
+        <!-- Mission Section -->
+        <div class="mission-section fade-in-up">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="mission-title">Our Mission</h2>
+                    <p class="mission-text">Our mission is to provide businesses with robust, real-time attack surface management solutions that empower them to identify vulnerabilities, safeguard their digital assets, and maintain a secure online presence.</p>
+                    <p class="mission-text">We combine cutting-edge technology, intuitive design, and a passion for cybersecurity to build a platform that simplifies vulnerability management for enterprises of all sizes.</p>
+                </div>
+                <div class="col-md-4 text-center d-none d-md-block">
+                    <i class="fas fa-bullseye fa-6x text-primary opacity-50"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="team-section">
+            <h2 class="fade-in-up">Our Team</h2>
+            
+            <!-- Team Lead -->
+            <div class="team-lead-container fade-in-up">
+                <div class="team-lead-card">
+                    <div class="team-member">
+                        <div class="position-relative">
+                            <!-- <img src="../static/images/ceo.jpg" alt="Rokkam Vamshi"> -->
+                        </div>
+                        <h3>Rokkam Vamshi</h3>
+                        <p> CISO </p>
+                        <div>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-linkedin linkedin-icon"></i>
+                            </a>
+                            <a href="#" class="social-icon ms-2">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="#" class="social-icon ms-2">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team Members -->
+            <div class="row">
+                <div class="col-md-3 col-sm-6 fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="team-member">
+                        <!-- <img src="../static/images/ceo.jpg" alt="J Kartheek"> -->
+                        <h3>J Kartheek</h3>
+                        <p>Security Specialist</p>
+                        <div>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-linkedin linkedin-icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="team-member">
+                        <!-- <img src="../static/images/ciso.jpg" alt="P Kavya"> -->
+                        <h3>P Kavya</h3>
+                        <p>Security Analyst</p>
+                        <div>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-linkedin linkedin-icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="team-member">
+                        <!-- <img src="../static/images/cto.jpg" alt="Sarah Brown"> -->
+                        <h3>T Lahai</h3>
+                        <p>Frontend Developer</p>
+                        <div>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-linkedin linkedin-icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 fade-in-up" style="animation-delay: 0.4s;">
+                    <div class="team-member">
+                        <!-- <img src="../static/images/designer.jpg" alt="Mike Johnson"> -->
+                        <h3>S Naveed</h3>
+                        <p>Fronted designer</p>
+                        <div>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-linkedin linkedin-icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Values Section -->
+        <div class="row fade-in-up">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-lock fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="card-title">Security First</h4>
+                        <p class="card-text text-muted">We prioritize security in everything we do, providing robust solutions that actually protect your digital assets.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-layer-group fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="card-title">Innovation</h4>
+                        <p class="card-text text-muted">We constantly push the boundaries of what's possible in cybersecurity, developing cutting-edge solutions.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="card-title">Customer Focus</h4>
+                        <p class="card-text text-muted">We build our platform with our users in mind, ensuring it meets real-world security needs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>

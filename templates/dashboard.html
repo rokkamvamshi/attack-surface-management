@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --info-color: #4361ee;
+            --card-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            
+            --critical-color: #e63946;
+            --high-color: #f94144;
+            --medium-color: #f8961e;
+            --low-color: #90be6d;
+            --info-bg-color: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f8f9fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-color);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 20px;
+            border-radius: 16px 16px 0 0 !important;
+            font-weight: 600;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+        
+        .stat-card {
+            padding: 25px;
+            text-align: center;
+            border-radius: 16px;
+        }
+        
+        .stat-card h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .stat-card h5 {
+            color: #6c757d;
+            font-weight: 600;
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .severity-badge {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .severity-critical {
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--critical-color);
+        }
+        
+        .severity-high {
+            background-color: rgba(249, 65, 68, 0.1);
+            color: var(--high-color);
+        }
+        
+        .severity-medium {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: var(--medium-color);
+        }
+        
+        .severity-low {
+            background-color: rgba(144, 190, 109, 0.1);
+            color: var(--low-color);
+        }
+        
+        .severity-info {
+            background-color: rgba(173, 181, 189, 0.1);
+            color: #6c757d;
+        }
+        
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(77, 171, 247, 0.05);
+        }
+        
+        .btn-view {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            background-color: rgba(77, 171, 247, 0.1);
+            color: var(--primary-color);
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-view:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .filter-control {
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            padding: 8px 15px;
+            font-size: 0.95rem;
+        }
+        
+        .filter-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(77, 171, 247, 0.25);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-toggle {
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background-color: #f8f9fa;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .modal-body pre {
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        .severity-summary {
+            display: flex;
+            justify-content: center;
+            background-color: white;
+            border-radius: 16px;
+            padding: 15px;
+            margin: 20px 0;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .severity-item {
+            text-align: center;
+            padding: 0 15px;
+            border-right: 1px solid #e9ecef;
+        }
+        
+        .severity-item:last-child {
+            border-right: none;
+        }
+        
+        .severity-count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .severity-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            .severity-summary {
+                flex-wrap: wrap;
+            }
+            
+            .severity-item {
+                width: 50%;
+                margin-bottom: 15px;
+                border-right: none;
+            }
+        }
+    </style>
+</head>
+<body>
+       <!-- Navbar -->
+       <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>ASM Platform
+            </a>
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bars me-1"></i> Menu
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                    
+                    <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="/dashboard"><i class="fas fa-chart-line me-2"></i>Dashboard</a></li>
+                    <li><a class="dropdown-item" href="/reports/dashboard"><i class="fas fa-rocket me-2"></i>Visualize The Results</a></li>
+                    <li><a class="dropdown-item" href="/scan"><i class="fas fa-search me-2"></i>Scan for Vulns</a></li>
+                    <li><a class="dropdown-item" href="/views_scans"><i class="fas fa-history me-2"></i>Previous Scans</a></li>
+                    <li><a class="dropdown-item" href="/help"><i class="fas fa-question-circle me-2"></i>Help Center</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <!-- Overview Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <i class="fas fa-search-location stat-icon"></i>
+                    <h5>Total Scans</h5>
+                    <h3>{{ total_scans }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <i class="fas fa-bug stat-icon"></i>
+                    <h5>Total Findings</h5>
+                    <h3>{{ total_vulnerabilities }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <i class="fas fa-exclamation-triangle stat-icon" style="color: var(--critical-color);"></i>
+                    <h5>Critical Issues</h5>
+                    <h3 class="text-danger">{{ severity_counts.critical }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Severity Summary -->
+        <div class="severity-summary">
+            <div class="severity-item">
+                <span class="severity-count text-danger">{{ severity_counts.critical }}</span>
+                <span class="severity-label">Critical</span>
+            </div>
+            <div class="severity-item">
+                <span class="severity-count text-warning">{{ severity_counts.high }}</span>
+                <span class="severity-label">High</span>
+            </div>
+            <div class="severity-item">
+                <span class="severity-count text-primary">{{ severity_counts.medium }}</span>
+                <span class="severity-label">Medium</span>
+            </div>
+            <div class="severity-item">
+                <span class="severity-count text-success">{{ severity_counts.low }}</span>
+                <span class="severity-label">Low</span>
+            </div>
+            <div class="severity-item">
+                <span class="severity-count text-muted">{{ severity_counts.info }}</span>
+                <span class="severity-label">Info</span>
+            </div>
+        </div>
+
+        <!-- Domain Selection & Search -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <label class="fw-bold mb-2">
+                            <i class="fas fa-filter me-2"></i>Select Domain:
+                        </label>
+                        <select id="domainSelect" class="form-control filter-control">
+                            <option value="">-- All Domains --</option>
+                            {% for domain in scanned_domains %}
+                                <option value="{{ domain }}">{{ domain }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <label class="fw-bold mb-2">
+                            <i class="fas fa-search me-2"></i>Search Vulnerabilities:
+                        </label>
+                        <input type="text" id="searchInput" class="form-control filter-control" 
+                               placeholder="Search for vulnerabilities...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toggle Info Findings Button -->
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <form method="GET" action="{% url 'dashboard' %}">
+                    <input type="hidden" name="show_info" value="{% if show_info %}false{% else %}true{% endif %}">
+                    <button type="submit" class="btn btn-toggle {% if show_info %}btn-danger{% else %}btn-primary{% endif %}">
+                        <i class="fas {% if show_info %}fa-eye-slash{% else %}fa-eye{% endif %} me-2"></i>
+                        {% if show_info %}Hide Info Findings{% else %}Show Info Findings{% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Chart Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie me-2"></i>Vulnerability Severity Distribution
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="severityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if show_info %}
+        <!-- Informational Findings Table -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-info-circle me-2"></i>Informational Findings
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Vulnerability</th>
+                                <th>Category</th>
+                                <th>Severity</th>
+                                <th>Subdomain</th>
+                                <th>Details</th>
+                                <th>Scan Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in info_results %}
+                            <tr>
+                                <td>{{ result.vulnerability }}</td>
+                                <td>{{ result.bug_class }}</td>
+                                <td>
+                                    <span class="severity-badge severity-info">
+                                        {{ result.severity|title }}
+                                    </span>
+                                </td>
+                                <td>{{ result.subdomain }}</td>
+                                <td>
+                                    <button class="btn btn-view" data-bs-toggle="modal" data-bs-target="#detailsModalInfo{{ forloop.counter }}">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </button>
+                                </td>
+                                <td>{{ result.timestamp }}</td>
+                            </tr>
+                
+                            <!-- Modal for Info Details -->
+<!-- Modal for Info Details -->
+<div class="modal fade" id="detailsModalInfo{{ forloop.counter }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-info-circle me-2"></i>Vulnerability Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-globe me-2"></i>Target:</strong> {{ result.target }}</p>
+                        <p><strong><i class="fas fa-sitemap me-2"></i>Subdomain:</strong> {{ result.subdomain }}</p>
+                        <p><strong><i class="fas fa-bug me-2"></i>Category:</strong> {{ result.bug_class }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-exclamation-circle me-2"></i>Severity:</strong> 
+                            <span class="severity-badge severity-info">{{ result.severity }}</span>
+                        </p>
+                        <p><strong><i class="fas fa-tag me-2"></i>Type:</strong> {{ result.vulnerability }}</p>
+                        <p><strong><i class="fas fa-clock me-2"></i>Scan Time:</strong> {{ result.timestamp }}</p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <h6><i class="fas fa-file-code me-2"></i>Technical Details:</h6>
+                    <pre class="bg-light p-3 rounded">{{ result.details }}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+{% endif %}
+
+<!-- Findings Table -->
+<div class="card mb-5">
+<div class="card-header">
+<i class="fas fa-shield-alt me-2"></i>Security Findings
+</div>
+<div class="card-body">
+<div class="table-responsive">
+<table class="table table-hover">
+<thead>
+<tr>
+    <th>Vulnerability</th>
+    <th>Category</th>
+    <th>Severity</th>
+    <th>Subdomain</th>
+    <th>Details</th>
+    <th>Scan Time</th>
+</tr>
+</thead>
+<tbody id="resultsTable">
+{% for result in parsed_results %}
+<tr data-domain="{{ result.target }}">
+    <td>{{ result.vulnerability }}</td>
+    <td>{{ result.bug_class }}</td>
+    <td>
+        <span class="severity-badge 
+            {% if result.severity == 'critical' %}severity-critical
+            {% elif result.severity == 'high' %}severity-high
+            {% elif result.severity == 'medium' %}severity-medium
+            {% elif result.severity == 'low' %}severity-low
+            {% else %}severity-info{% endif %}">
+            {{ result.severity|title }}
+        </span>
+    </td>
+    <td>{{ result.subdomain }}</td>
+    <td>
+        <button class="btn btn-view" data-bs-toggle="modal" data-bs-target="#detailsModal{{ forloop.counter }}">
+            <i class="fas fa-eye me-1"></i>View
+        </button>
+    </td>
+    <td>{{ result.timestamp }}</td>
+</tr>
+
+<!-- Modal for Scan Details -->
+<div class="modal fade" id="detailsModal{{ forloop.counter }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-shield-alt me-2"></i>Vulnerability Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-globe me-2"></i>Target:</strong> {{ result.target }}</p>
+                        <p><strong><i class="fas fa-sitemap me-2"></i>Subdomain:</strong> {{ result.subdomain }}</p>
+                        <p><strong><i class="fas fa-bug me-2"></i>Category:</strong> {{ result.bug_class }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-exclamation-circle me-2"></i>Severity:</strong> 
+                            <span class="severity-badge 
+                                {% if result.severity == 'critical' %}severity-critical
+                                {% elif result.severity == 'high' %}severity-high
+                                {% elif result.severity == 'medium' %}severity-medium
+                                {% elif result.severity == 'low' %}severity-low
+                                {% else %}severity-info{% endif %}">
+                                {{ result.severity|title }}
+                            </span>
+                        </p>
+                        <p><strong><i class="fas fa-tag me-2"></i>Type:</strong> {{ result.vulnerability }}</p>
+                        <p><strong><i class="fas fa-clock me-2"></i>Scan Time:</strong> {{ result.timestamp }}</p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <h6><i class="fas fa-file-code me-2"></i>Technical Details:</h6>
+                    <pre class="bg-light p-3 rounded">{{ result.details }}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<!-- JavaScript for Filtering -->
+<script>
+// Filter by domain
+document.getElementById("domainSelect").addEventListener("change", function() {
+let selectedDomain = this.value;
+let rows = document.querySelectorAll("#resultsTable tr");
+rows.forEach(row => {
+row.style.display = selectedDomain === "" || row.getAttribute("data-domain") === selectedDomain ? "" : "none";
+});
+});
+
+// Search functionality
+document.getElementById("searchInput").addEventListener("input", function() {
+let searchText = this.value.toLowerCase();
+let rows = document.querySelectorAll("#resultsTable tr");
+rows.forEach(row => {
+row.style.display = row.textContent.toLowerCase().includes(searchText) ? "" : "none";
+});
+});
+
+// Severity chart
+document.addEventListener('DOMContentLoaded', function() {
+const ctx = document.getElementById('severityChart').getContext('2d');
+const severityChart = new Chart(ctx, {
+type: 'doughnut',
+data: {
+labels: ['Critical', 'High', 'Medium', 'Low', 'Info'],
+datasets: [{
+data: [
+{{ severity_counts.critical }}, 
+{{ severity_counts.high }}, 
+{{ severity_counts.medium }}, 
+{{ severity_counts.low }}, 
+{{ severity_counts.info }}
+],
+backgroundColor: [
+'#e63946', // critical
+'#f94144', // high
+'#f8961e', // medium
+'#90be6d', // low
+'#adb5bd'  // info
+],
+borderWidth: 1
+}]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: {
+position: 'right',
+labels: {
+    padding: 20,
+    font: {
+        size: 12
+    }
+}
+},
+tooltip: {
+callbacks: {
+    label: function(context) {
+        const value = context.raw;
+        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+        const percentage = Math.round((value / total) * 100);
+        return `${context.label}: ${value} (${percentage}%)`;
+    }
+}
+}
+},
+cutout: '65%',
+animation: {
+animateScale: true,
+animateRotate: true
+}
+}
+});
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<script>
+// Feedback Widget JavaScript
+// This script creates a floating feedback button that opens a feedback form
+
+// Create the feedback widget HTML
+function createFeedbackWidget() {
+    // Create widget container
+    const widgetContainer = document.createElement('div');
+    widgetContainer.id = 'feedback-widget-container';
+    widgetContainer.style.position = 'fixed';
+    widgetContainer.style.right = '20px';
+    widgetContainer.style.bottom = '20px';
+    widgetContainer.style.zIndex = '9999';
+    
+    // Create trigger button
+    const triggerButton = document.createElement('button');
+    triggerButton.id = 'feedback-trigger';
+    triggerButton.innerHTML = '<i class="fas fa-comment-alt"></i> Feedback';
+    triggerButton.className = 'btn btn-primary';
+    triggerButton.style.borderRadius = '50px';
+    triggerButton.style.padding = '10px 20px';
+    triggerButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+    
+    // Create feedback modal
+    const modalHtml = `
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackModalLabel">Share Your Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm">
+                        <div class="mb-3">
+                            <label class="form-label">How would you rate your experience?</label>
+                            <div class="rating-container text-center mb-3">
+                                <div class="btn-group" role="group" aria-label="Rating">
+                                    <input type="radio" class="btn-check" name="rating" id="rating1" value="1" autocomplete="off">
+                                    <label class="btn btn-outline-warning" for="rating1">1</label>
+                                    
+                                    <input type="radio" class="btn-check" name="rating" id="rating2" value="2" autocomplete="off">
+                                    <label class="btn btn-outline-warning" for="rating2">2</label>
+                                    
+                                    <input type="radio" class="btn-check" name="rating" id="rating3" value="3" autocomplete="off">
+                                    <label class="btn btn-outline-warning" for="rating3">3</label>
+                                    
+                                    <input type="radio" class="btn-check" name="rating" id="rating4" value="4" autocomplete="off">
+                                    <label class="btn btn-outline-warning" for="rating4">4</label>
+                                    
+                                    <input type="radio" class="btn-check" name="rating" id="rating5" value="5" autocomplete="off">
+                                    <label class="btn btn-outline-warning" for="rating5">5</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedbackType" class="form-label">What type of feedback do you have?</label>
+                            <select class="form-select" id="feedbackType" required>
+                                <option value="" selected disabled>Select an option</option>
+                                <option value="bug">Bug Report</option>
+                                <option value="feature">Feature Request</option>
+                                <option value="usability">Usability Issue</option>
+                                <option value="praise">Praise</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedbackText" class="form-label">Your feedback</label>
+                            <textarea class="form-control" id="feedbackText" rows="4" placeholder="Please describe your feedback in detail..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="contactConsent">
+                                <label class="form-check-label" for="contactConsent">
+                                    I'm OK with being contacted about this feedback
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="emailField" style="display: none;">
+                            <label for="contactEmail" class="form-label">Email (optional)</label>
+                            <input type="email" class="form-control" id="contactEmail" placeholder="your@email.com">
+                        </div>
+                        <input type="hidden" id="pageUrl" value="${window.location.href}">
+                        <input type="hidden" id="userAgent" value="${navigator.userAgent}">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submitFeedback">Submit Feedback</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // Add trigger button to container
+    widgetContainer.appendChild(triggerButton);
+    
+    // Add container to body
+    document.body.appendChild(widgetContainer);
+    
+    // Set up event listeners
+    setupFeedbackEvents();
+}
+
+// Set up the event listeners for the feedback widget
+function setupFeedbackEvents() {
+    // Trigger button opens modal
+    document.getElementById('feedback-trigger').addEventListener('click', function() {
+        const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+        feedbackModal.show();
+    });
+    
+    // Show/hide email field based on consent checkbox
+    document.getElementById('contactConsent').addEventListener('change', function() {
+        document.getElementById('emailField').style.display = this.checked ? 'block' : 'none';
+    });
+    
+    // Handle form submission
+    document.getElementById('submitFeedback').addEventListener('click', function() {
+        submitFeedback();
+    });
+}
+
+// Submit feedback to the server
+function submitFeedback() {
+    const form = document.getElementById('feedbackForm');
+    
+    // Get selected rating
+    let rating = document.querySelector('input[name="rating"]:checked');
+    rating = rating ? rating.value : null;
+    
+    // Basic validation
+    const feedbackType = document.getElementById('feedbackType').value;
+    const feedbackText = document.getElementById('feedbackText').value;
+    
+    if (!feedbackType || !feedbackText) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+    
+    // Prepare data for submission
+    const feedbackData = {
+        rating: rating,
+        type: feedbackType,
+        feedback: feedbackText,
+        contact_consent: document.getElementById('contactConsent').checked,
+        email: document.getElementById('contactEmail').value,
+        page_url: document.getElementById('pageUrl').value,
+        user_agent: document.getElementById('userAgent').value,
+        timestamp: new Date().toISOString()
+    };
+    
+    // Send to server
+    fetch('/submit-feedback/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken() // Get CSRF token from cookies
+        },
+        body: JSON.stringify(feedbackData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Hide modal
+        bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
+        
+        // Show success message
+        showFeedbackSuccess();
+        
+        // Reset form
+        form.reset();
+        document.getElementById('emailField').style.display = 'none';
+    })
+    .catch(error => {
+        console.error('Error submitting feedback:', error);
+        alert('There was an error submitting your feedback. Please try again later.');
+    });
+}
+
+// Show success message after submitting feedback
+function showFeedbackSuccess() {
+    // Create toast notification
+    const toastHtml = `
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+        <div id="feedbackToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>Thank you for your feedback!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    `;
+    
+    // Add toast to body if it doesn't exist
+    if (!document.getElementById('feedbackToast')) {
+        document.body.insertAdjacentHTML('beforeend', toastHtml);
+    }
+    
+    // Show the toast
+    const toastEl = document.getElementById('feedbackToast');
+    const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+    toast.show();
+}
+
+// Helper function to get CSRF token from cookies
+function getCsrfToken() {
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+    
+    return cookieValue || '';
+}
+
+// Initialize the feedback widget when the DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    createFeedbackWidget();
+});
+</script>
+

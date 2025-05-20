@@ -1,0 +1,35 @@
+id: github-phish
+
+info:
+  name: github phishing Detection
+  author: rxerium
+  severity: info
+  description: |
+    A github phishing website was detected
+  reference:
+    - https://github.com
+  metadata:
+    max-request: 1
+  tags: phishing,github,osint
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    host-redirects: true
+    max-redirects: 2
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - 'Sign in to GitHub · GitHub'
+
+      - type: status
+        status:
+          - 200
+
+      - type: dsl
+        dsl:
+          - '!contains(host,"github.com")'
+# digest: 4a0a004730450221009b7e3bab58c4003019ed04d45befda285a860735092f0374987af7b6e6624e8a02206d02bca66cbfd373d03c4b5c485e67b06708d8acc8621dc3d1e28406cf402f71:922c64590222798bb761d5b6d8e72950

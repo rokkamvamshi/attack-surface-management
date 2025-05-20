@@ -1,0 +1,30 @@
+id: vmware-aria-panel
+
+info:
+  name: VMware Aria Operations Login - Detect
+  author: rxerium
+  severity: info
+  description: |
+    Detects VMware Aria Operations Panel.
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: title:"VMware Aria Operations"
+  tags: panel,aria,login,detect
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/ui/login.action"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "<title>VMware Aria Operations</title>"
+
+      - type: status
+        status:
+          - 200
+# digest: 4a0a00473045022100b49b9208195bc2c9c76d430e12c55accd65c8f64e606869f635c5f0757ac9d66022010ce2aeeb943f0e218d5aa1a2c879765b8137ff01d2e8d11143900f265c53077:922c64590222798bb761d5b6d8e72950

@@ -1,0 +1,804 @@
+<!-- report_builder.html - Put this in templates/reports/ folder -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Builder - ASM Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --card-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: #f8f9fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            padding: 30px 15px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 25px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            border-radius: 16px 16px 0 0 !important;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .form-control, .form-select {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(77, 171, 247, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(67, 97, 238, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(67, 97, 238, 0.2);
+        }
+        
+        .report-template {
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .report-template:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .report-template.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .report-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 30px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar (same as other pages) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>ASM Platform
+            </a>
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bars me-1"></i> Menu
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="/view"><i class="fas fa-home me-2"></i>Home</a></li>
+                    <li><a class="dropdown-item" href="/dashboard"><i class="fas fa-chart-line me-2"></i>Dashboard</a></li>
+                    <li><a class="dropdown-item" href="/scan"><i class="fas fa-search me-2"></i>New Scan</a></li>
+                    <li><a class="dropdown-item" href="/views_scans"><i class="fas fa-history me-2"></i>Previous Scans</a></li>
+                    <li><a class="dropdown-item" href="/help"><i class="fas fa-question-circle me-2"></i>Help Center</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <h2 class="page-title">Security Report Builder</h2>
+        
+        <div class="card fade-in-up">
+            <div class="card-header">
+                <i class="fas fa-file-alt me-2"></i>Generate Custom Security Reports
+            </div>
+            <div class="card-body p-4">
+                <form id="reportBuilderForm" action="{% url 'generate_report' %}" method="GET">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="domainSelect" class="form-label fw-bold">Select Domain</label>
+                            <select id="domainSelect" name="domain" class="form-select">
+                                <option value="">All Domains</option>
+                                {% for domain in domains %}
+                                    <option value="{{ domain }}">{{ domain }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Select a specific domain or generate a report for all domains</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="dateRange" class="form-label fw-bold">Date Range</label>
+                            <input type="text" id="dateRange" name="date_range" class="form-control" placeholder="Select date range">
+                            <small class="text-muted">Optional: Filter results by date range</small>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Report Components</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="includeExecutiveSummary" name="include_summary" checked>
+                                        <label class="form-check-label" for="includeExecutiveSummary">
+                                            Executive Summary
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="includeVulnerabilityDetails" name="include_details" checked>
+                                        <label class="form-check-label" for="includeVulnerabilityDetails">
+                                            Vulnerability Details
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="includeVisualization" name="include_charts" checked>
+                                        <label class="form-check-label" for="includeVisualization">
+                                            Visual Representations
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Report Type</label>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="report-template active" data-report-type="pdf">
+                                        <div class="text-center">
+                                            <i class="fas fa-file-pdf report-icon"></i>
+                                            <h5>PDF Report</h5>
+                                            <p class="text-muted">Professional PDF report with all selected components</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="report-template" data-report-type="csv">
+                                        <div class="text-center">
+                                            <i class="fas fa-file-csv report-icon"></i>
+                                            <h5>CSV Export</h5>
+                                            <p class="text-muted">Export vulnerability findings as CSV for analysis</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="report-template" data-report-type="json">
+                                        <div class="text-center">
+                                            <i class="fas fa-file-code report-icon"></i>
+                                            <h5>JSON Export</h5>
+                                            <p class="text-muted">Export complete report data as JSON</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="reportTypeInput" name="type" value="pdf">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-file-export me-2"></i>Generate Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card fade-in-up">
+            <div class="card-header">
+                <i class="fas fa-info-circle me-2"></i>About Security Reports
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-chart-pie me-2 text-primary"></i>Executive Summary</h5>
+                        <p>The executive summary provides a high-level overview of your security findings, including:</p>
+                        <ul>
+                            <li>Total vulnerabilities discovered</li>
+                            <li>Risk assessment score</li>
+                            <li>Most critical security issues</li>
+                            <li>Top vulnerable subdomains</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-file-alt me-2 text-primary"></i>Vulnerability Details</h5>
+                        <p>The detailed section includes comprehensive information about:</p>
+                        <ul>
+                            <li>All discovered vulnerabilities with severity ratings</li>
+                            <li>Technical details and affected URLs</li>
+                            <li>Suggestions for remediation</li>
+                            <li>Timeline of vulnerability discovery</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-chart-line me-2 text-primary"></i>Visual Representations</h5>
+                        <p>Visual elements help understand the security findings at a glance:</p>
+                        <ul>
+                            <li>Severity distribution charts</li>
+                            <li>Top vulnerable subdomain graphs</li>
+                            <li>Vulnerability type breakdown</li>
+                            <li>Risk trends over time</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-download me-2 text-primary"></i>Export Options</h5>
+                        <p>Choose from multiple export formats:</p>
+                        <ul>
+                            <li><strong>PDF:</strong> Professional report with all components</li>
+                            <li><strong>CSV:</strong> Spreadsheet-friendly data for further analysis</li>
+                            <li><strong>JSON:</strong> Machine-readable format for integration with other tools</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Initialize date range picker
+            $('#dateRange').daterangepicker({
+                opens: 'left',
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear',
+                    format: 'YYYY-MM-DD'
+                }
+            });
+            
+            $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+            });
+            
+            $('#dateRange').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+            });
+            
+            // Handle report type selection
+            $('.report-template').click(function() {
+                // Remove active class from all templates
+                $('.report-template').removeClass('active');
+                // Add active class to selected template
+                $(this).addClass('active');
+                // Update hidden input value
+                $('#reportTypeInput').val($(this).data('report-type'));
+            });
+        });
+    </script>
+</body>
+</html>
+
+<!-- pdf_report_template.html - Put this in templates/reports/ folder -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Report</title>
+    <style>
+        /* PDF Styles */
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2cm;
+            padding-bottom: 0.5cm;
+            border-bottom: 1px solid #eee;
+        }
+        .header img {
+            max-width: 200px;
+            margin-bottom: 0.5cm;
+        }
+        .header h1 {
+            color: #4361ee;
+            font-size: 28px;
+            margin: 0;
+            padding: 0;
+        }
+        .header p {
+            font-size: 14px;
+            color: #666;
+            margin-top: 0.3cm;
+        }
+        .section {
+            margin-bottom: 1.5cm;
+        }
+        .section h2 {
+            color: #4361ee;
+            font-size: 18px;
+            margin-top: 0;
+            padding-bottom: 0.2cm;
+            border-bottom: 1px solid #eee;
+        }
+        .section h3 {
+            color: #3f37c9;
+            font-size: 16px;
+            margin-top: 0.8cm;
+            margin-bottom: 0.3cm;
+        }
+        .section p {
+            margin: 0.2cm 0;
+        }
+        .summary-box {
+            background-color: #f8f9fb;
+            padding: 0.5cm;
+            border-radius: 5px;
+            margin-bottom: 0.8cm;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 0.5cm;
+        }
+        .summary-item {
+            margin-bottom: 0.3cm;
+        }
+        .summary-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 12px;
+        }
+        .summary-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .risk-score {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .risk-critical {
+            color: #e63946;
+        }
+        .risk-high {
+            color: #f94144;
+        }
+        .risk-medium {
+            color: #f8961e;
+        }
+        .risk-low {
+            color: #90be6d;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.5cm 0;
+        }
+        table th {
+            background-color: #f8f9fb;
+            padding: 0.2cm;
+            text-align: left;
+            font-weight: bold;
+            color: #4361ee;
+            font-size: 12px;
+        }
+        table td {
+            padding: 0.2cm;
+            border-bottom: 1px solid #eee;
+            font-size: 12px;
+        }
+        .severity-badge {
+            display: inline-block;
+            padding: 0.1cm 0.3cm;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .severity-critical {
+            background-color: rgba(230, 57, 70, 0.1);
+            color: #e63946;
+        }
+        .severity-high {
+            background-color: rgba(249, 65, 68, 0.1);
+            color: #f94144;
+        }
+        .severity-medium {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: #f8961e;
+        }
+        .severity-low {
+            background-color: rgba(144, 190, 109, 0.1);
+            color: #90be6d;
+        }
+        .severity-info {
+            background-color: rgba(173, 181, 189, 0.1);
+            color: #6c757d;
+        }
+        .chart-container {
+            margin: 0.8cm 0;
+            text-align: center;
+        }
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            margin-top: 2cm;
+            padding-top: 0.3cm;
+            border-top: 1px solid #eee;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Security Assessment Report</h1>
+        <p>
+            <strong>Date:</strong> {{ report.generation_date|date:"F j, Y" }} |
+            <strong>Target:</strong> {% if report.domain %}{{ report.domain }}{% else %}Multiple Domains{% endif %}
+        </p>
+    </div>
+    
+    <!-- Executive Summary Section -->
+    <div class="section">
+        <h2>Executive Summary</h2>
+        
+        <div class="summary-box">
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-label">RISK LEVEL</div>
+                    <div class="summary-value risk-score risk-{{ summary.risk_level|lower }}">{{ summary.risk_level }}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">RISK SCORE</div>
+                    <div class="summary-value">{{ summary.risk_score }}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">SUBDOMAINS SCANNED</div>
+                    <div class="summary-value">{{ summary.subdomains_count }}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">TOTAL VULNERABILITIES</div>
+                    <div class="summary-value">{{ summary.total_vulnerabilities }}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">CRITICAL ISSUES</div>
+                    <div class="summary-value risk-critical">{{ summary.critical_count }}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">HIGH SEVERITY ISSUES</div>
+                    <div class="summary-value risk-high">{{ summary.high_count }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <h3>Key Findings</h3>
+        <p>This security assessment identified several vulnerabilities that require attention. The overall risk level is <strong class="risk-{{ summary.risk_level|lower }}">{{ summary.risk_level }}</strong>, based on the number and severity of issues detected.</p>
+        
+        {% if summary.top_vulnerabilities %}
+        <p><strong>Top vulnerability types:</strong></p>
+        <ul>
+            {% for vuln in summary.top_vulnerabilities %}
+            <li>{{ vuln }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        {% if summary.top_vulnerable_subdomains %}
+        <p><strong>Most vulnerable subdomains:</strong></p>
+        <ul>
+            {% for subdomain in summary.top_vulnerable_subdomains %}
+            <li>{{ subdomain }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <p>We recommend prioritizing the critical and high severity issues identified in this report to improve the security posture of your digital assets.</p>
+    </div>
+    
+    <!-- Add page break after executive summary -->
+    <div class="page-break"></div>
+    
+    <!-- Vulnerability Distribution Charts -->
+    <div class="section">
+        <h2>Vulnerability Analysis</h2>
+        
+        <h3>Severity Distribution</h3>
+        <div class="chart-container" id="severityChart">
+            <!-- Charts will be dynamically generated and embedded as images -->
+            <!-- This is a placeholder for the PDF generation process -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Severity</th>
+                        <th>Count</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% with by_severity=report.vulnerabilities.by_severity %}
+                    {% with total=report.vulnerabilities.count %}
+                    <tr>
+                        <td><span class="severity-badge severity-critical">Critical</span></td>
+                        <td>{{ by_severity.critical }}</td>
+                        <td>{% if total %}{{ by_severity.critical|floatformat:1 }}%{% else %}0%{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="severity-badge severity-high">High</span></td>
+                        <td>{{ by_severity.high }}</td>
+                        <td>{% if total %}{{ by_severity.high|floatformat:1 }}%{% else %}0%{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="severity-badge severity-medium">Medium</span></td>
+                        <td>{{ by_severity.medium }}</td>
+                        <td>{% if total %}{{ by_severity.medium|floatformat:1 }}%{% else %}0%{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="severity-badge severity-low">Low</span></td>
+                        <td>{{ by_severity.low }}</td>
+                        <td>{% if total %}{{ by_severity.low|floatformat:1 }}%{% else %}0%{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="severity-badge severity-info">Info</span></td>
+                        <td>{{ by_severity.info }}</td>
+                        <td>{% if total %}{{ by_severity.info|floatformat:1 }}%{% else %}0%{% endif %}</td>
+                    </tr>
+                    {% endwith %}
+                    {% endwith %}
+                </tbody>
+            </table>
+        </div>
+        
+        <h3>Top Vulnerability Types</h3>
+        <div class="chart-container" id="vulnerabilityTypeChart">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vulnerability Type</th>
+                        <th>Count</th>  
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vuln_type, count in report.vulnerabilities.by_type.items|slice:":5" %}
+                    <tr>
+                        <td>{{ vuln_type }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <h3>Most Vulnerable Subdomains</h3>
+        <div class="chart-container" id="subdomainChart">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subdomain</th>
+                        <th>Critical</th>
+                        <th>High</th>
+                        <th>Medium</th>
+                        <th>Low</th>
+                        <th>Info</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subdomain, data in report.insights.most_vulnerable_subdomains.items %}
+                    <tr>
+                        <td>{{ subdomain }}</td>
+                        <td>{{ data.critical }}</td>
+                        <td>{{ data.high }}</td>
+                        <td>{{ data.medium }}</td>
+                        <td>{{ data.low }}</td>
+                        <td>{{ data.info }}</td>
+                        <td><strong>{{ data.total }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Add page break before detailed findings -->
+    <div class="page-break"></div>
+    
+    <!-- Detailed Findings Section -->
+    <div class="section">
+        <h2>Detailed Vulnerability Findings</h2>
+        
+        {% with vulns=report.vulnerabilities.list %}
+        {% if vulns %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vulnerability</th>
+                        <th>Severity</th>
+                        <th>Subdomain</th>
+                        <th>URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vuln in vulns %}
+                    <tr>
+                        <td>{{ vuln.vulnerability }}</td>
+                        <td><span class="severity-badge severity-{{ vuln.severity }}">{{ vuln.severity }}</span></td>
+                        <td>{{ vuln.subdomain }}</td>
+                        <td>{{ vuln.url|truncatechars:30 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <!-- Detailed descriptions of critical and high vulnerabilities -->
+            <h3>Critical & High Severity Vulnerabilities</h3>
+            {% for vuln in vulns %}
+                {% if vuln.severity == 'critical' or vuln.severity == 'high' %}
+                <div>
+                    <h4>{{ vuln.vulnerability }}</h4>
+                    <p><strong>Severity:</strong> <span class="severity-badge severity-{{ vuln.severity }}">{{ vuln.severity }}</span></p>
+                    <p><strong>Affected URL:</strong> {{ vuln.url }}</p>
+                    <p><strong>Details:</strong> {{ vuln.details }}</p>
+                    {% if not forloop.last and forloop.counter|divisibleby:2 %}
+                    <div class="page-break"></div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>No vulnerabilities were found during the assessment.</p>
+        {% endif %}
+        {% endwith %}
+    </div>
+    
+    <!-- Recommendations Section -->
+    <div class="section">
+        <h2>Recommendations</h2>
+        
+        <p>Based on the vulnerabilities identified, we recommend the following actions:</p>
+        
+        <h3>Critical Priority</h3>
+        <ul>
+            {% if report.vulnerabilities.by_severity.critical > 0 %}
+                <li>Immediately address all critical vulnerabilities identified in this report.</li>
+                <li>Implement proper input validation and output encoding to prevent injection attacks.</li>
+                <li>Review and update access control mechanisms for all affected applications.</li>
+            {% else %}
+                <li>No critical vulnerabilities were identified.</li>
+            {% endif %}
+        </ul>
+        
+        <h3>High Priority</h3>
+        <ul>
+            {% if report.vulnerabilities.by_severity.high > 0 %}
+                <li>Address high severity vulnerabilities within the next two weeks.</li>
+                <li>Implement secure coding practices across development teams.</li>
+                <li>Conduct security awareness training for all developers.</li>
+            {% else %}
+                <li>No high severity vulnerabilities were identified.</li>
+            {% endif %}
+        </ul>
+        
+        <h3>Medium Priority</h3>
+        <ul>
+            {% if report.vulnerabilities.by_severity.medium > 0 %}
+                <li>Plan to address medium severity issues in the next 30 days.</li>
+                <li>Review and update security headers on all web applications.</li>
+                <li>Implement regular vulnerability scanning.</li>
+            {% else %}
+                <li>No medium severity vulnerabilities were identified.</li>
+            {% endif %}
+        </ul>
+        
+        <h3>Recommended Best Practices</h3>
+        <ul>
+            <li>Implement a regular security testing program.</li>
+            <li>Review and update security policies and procedures.</li>
+            <li>Establish a vulnerability management program.</li>
+            <li>Consider implementing a web application firewall (WAF).</li>
+            <li>Develop and maintain a security incident response plan.</li>
+        </ul>
+    </div>
+    
+    <div class="footer">
+        <p>Generated by ASM Platform | {{ report.generation_date|date:"F j, Y H:i" }}</p>
+        <p>CONFIDENTIAL - For authorized use only</p>
+    </div>
+</body>
+</html>

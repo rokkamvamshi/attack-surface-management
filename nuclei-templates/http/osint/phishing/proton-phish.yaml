@@ -1,0 +1,35 @@
+id: proton-phish
+
+info:
+  name: proton phishing Detection
+  author: rxerium
+  severity: info
+  description: |
+    A proton phishing website was detected
+  reference:
+    - https://proton.me
+  metadata:
+    max-request: 1
+  tags: phishing,proton,osint
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    host-redirects: true
+    max-redirects: 2
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - 'Proton Account: Sign-in'
+
+      - type: status
+        status:
+          - 200
+
+      - type: dsl
+        dsl:
+          - '!contains(host,"proton.me")'
+# digest: 4a0a004730450220121c6a66a2e3390921e739ea2aca29d41a411894fbf94501bc76f25d4096f30502210086ca21d106efd51e732ddbc83fe45594b848805f27f63315e4aea67f815ca0e6:922c64590222798bb761d5b6d8e72950

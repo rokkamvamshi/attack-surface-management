@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Report Dashboard - ASM Platform</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --critical-color: #e63946;
+            --high-color: #f94144;
+            --medium-color: #f8961e;
+            --low-color: #90be6d;
+            --info-color: #adb5bd;
+            --card-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: #f8f9fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            padding: 30px 15px;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .risk-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .risk-critical {
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--critical-color);
+        }
+        
+        .risk-high {
+            background-color: rgba(249, 65, 68, 0.1);
+            color: var(--high-color);
+        }
+        
+        .risk-medium {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: var(--medium-color);
+        }
+        
+        .risk-low {
+            background-color: rgba(144, 190, 109, 0.1);
+            color: var(--low-color);
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        
+        .tab-content {
+            padding: 25px 0;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-right: 10px;
+            color: #6c757d;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: white;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .export-card {
+            text-align: center;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .export-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .export-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            border-radius: 16px 16px 0 0 !important;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>ASM Platform
+            </a>
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bars me-1"></i> Menu
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                    
+                    <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="/dashboard"><i class="fas fa-chart-line me-2"></i>Dashboard</a></li>
+                    <li><a class="dropdown-item" href="/reports/dashboard"><i class="fas fa-rocket me-2"></i>Visualize The Results</a></li>
+                    <li><a class="dropdown-item" href="/scan"><i class="fas fa-search me-2"></i>Scan for Vulns</a></li>
+                    <li><a class="dropdown-item" href="/views_scans"><i class="fas fa-history me-2"></i>Previous Scans</a></li>
+                    <li><a class="dropdown-item" href="/help"><i class="fas fa-question-circle me-2"></i>Help Center</a></li>
+                    
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container my-4">
+        <h2 class="page-title">Security Report Dashboard</h2>
+        
+        <!-- Filter Controls -->
+        <div class="card fade-in-up mb-4">
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="domainSelect" class="form-label fw-bold">Domain</label>
+                        <select id="domainSelect" class="form-control form-select">
+                            <option value="">All Domains</option>
+                            {% for domain in domains %}
+                                <option value="{{ domain }}">{{ domain }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="dateRange" class="form-label fw-bold">Date Range</label>
+                        <input type="text" id="dateRange" class="form-control" placeholder="Select date range">
+                    </div>
+                    
+                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                        <button id="generateDashboard" class="btn btn-primary w-100">
+                            <i class="fas fa-chart-line me-2"></i>Generate Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary" type="button" role="tab" aria-controls="summary" aria-selected="true">
+                    <i class="fas fa-file-alt me-2"></i>Executive Summary
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="visualization-tab" data-bs-toggle="tab" data-bs-target="#visualization" type="button" role="tab" aria-controls="visualization" aria-selected="false">
+                    <i class="fas fa-chart-pie me-2"></i>Visualizations
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="export-tab" data-bs-toggle="tab" data-bs-target="#export" type="button" role="tab" aria-controls="export" aria-selected="false">
+                    <i class="fas fa-file-export me-2"></i>Export Reports
+                </button>
+            </li>
+        </ul>
+        
+        <!-- Dashboard Content -->
+        <div class="tab-content" id="reportTabContent">
+            <!-- Initial State - No Data -->
+            <div id="initialState" class="text-center py-5">
+                <i class="fas fa-chart-bar fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">Select filters and generate the dashboard</h4>
+                <p class="text-muted">Choose a domain and date range to view security insights</p>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="text-center py-5" style="display: none;">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h4 class="text-muted">Loading report data...</h4>
+            </div>
+            
+            <!-- Dashboard Tabs - Hidden initially -->
+            <div id="dashboardContent" style="display: none;">
+                <!-- Executive Summary Tab -->
+                <div class="tab-pane fade show active" id="summary" role="tabpanel" aria-labelledby="summary-tab">
+                    <!-- Summary content will be inserted here by JavaScript -->
+                </div>
+                
+                <!-- Visualizations Tab -->
+                <div class="tab-pane fade" id="visualization" role="tabpanel" aria-labelledby="visualization-tab">
+                    <!-- Visualization content will be inserted here by JavaScript -->
+                </div>
+                
+                <!-- Export Tab -->
+                <div class="tab-pane fade" id="export" role="tabpanel" aria-labelledby="export-tab">
+                    <!-- Export content will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/report-dashboard.js"></script>
+    <div id="debug-info" style="margin-top: 50px; padding: 20px; background-color: #f5f5f5; border-radius: 8px;">
+        <h3>Debug Information</h3>
+        <div>
+            <button id="test-fetch" class="btn btn-info">Test Fetch API</button>
+            <div id="fetch-result" style="margin-top: 10px; padding: 10px; background-color: #fff; border-radius: 4px;"></div>
+        </div>
+        <script>
+            document.getElementById('test-fetch').addEventListener('click', function() {
+                const resultDiv = document.getElementById('fetch-result');
+                resultDiv.innerHTML = 'Testing fetch...';
+                
+                // Build a test URL
+                const params = new URLSearchParams();
+                params.append('data', 'json');
+                params.append('test', 'true');
+                
+                const fullUrl = `${window.location.pathname}?${params.toString()}`;
+                
+                // Make a test request
+                fetch(fullUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(response => {
+                    resultDiv.innerHTML += `<br>Response status: ${response.status}`;
+                    return response.text();
+                })
+                .then(text => {
+                    resultDiv.innerHTML += `<br>Response text: ${text.substring(0, 200)}...`;
+                    
+                    try {
+                        const json = JSON.parse(text);
+                        resultDiv.innerHTML += `<br>Parsed JSON successfully`;
+                    } catch (e) {
+                        resultDiv.innerHTML += `<br>Error parsing JSON: ${e.message}`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML += `<br>Error: ${error.message}`;
+                });
+            });
+        </script>
+        <script>
+            // Feedback Widget JavaScript
+            // This script creates a floating feedback button that opens a feedback form
+            
+            // Create the feedback widget HTML
+            function createFeedbackWidget() {
+                // Create widget container
+                const widgetContainer = document.createElement('div');
+                widgetContainer.id = 'feedback-widget-container';
+                widgetContainer.style.position = 'fixed';
+                widgetContainer.style.right = '20px';
+                widgetContainer.style.bottom = '20px';
+                widgetContainer.style.zIndex = '9999';
+                
+                // Create trigger button
+                const triggerButton = document.createElement('button');
+                triggerButton.id = 'feedback-trigger';
+                triggerButton.innerHTML = '<i class="fas fa-comment-alt"></i> Feedback';
+                triggerButton.className = 'btn btn-primary';
+                triggerButton.style.borderRadius = '50px';
+                triggerButton.style.padding = '10px 20px';
+                triggerButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                
+                // Create feedback modal
+                const modalHtml = `
+                <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="feedbackModalLabel">Share Your Feedback</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="feedbackForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">How would you rate your experience?</label>
+                                        <div class="rating-container text-center mb-3">
+                                            <div class="btn-group" role="group" aria-label="Rating">
+                                                <input type="radio" class="btn-check" name="rating" id="rating1" value="1" autocomplete="off">
+                                                <label class="btn btn-outline-warning" for="rating1">1</label>
+                                                
+                                                <input type="radio" class="btn-check" name="rating" id="rating2" value="2" autocomplete="off">
+                                                <label class="btn btn-outline-warning" for="rating2">2</label>
+                                                
+                                                <input type="radio" class="btn-check" name="rating" id="rating3" value="3" autocomplete="off">
+                                                <label class="btn btn-outline-warning" for="rating3">3</label>
+                                                
+                                                <input type="radio" class="btn-check" name="rating" id="rating4" value="4" autocomplete="off">
+                                                <label class="btn btn-outline-warning" for="rating4">4</label>
+                                                
+                                                <input type="radio" class="btn-check" name="rating" id="rating5" value="5" autocomplete="off">
+                                                <label class="btn btn-outline-warning" for="rating5">5</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="feedbackType" class="form-label">What type of feedback do you have?</label>
+                                        <select class="form-select" id="feedbackType" required>
+                                            <option value="" selected disabled>Select an option</option>
+                                            <option value="bug">Bug Report</option>
+                                            <option value="feature">Feature Request</option>
+                                            <option value="usability">Usability Issue</option>
+                                            <option value="praise">Praise</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="feedbackText" class="form-label">Your feedback</label>
+                                        <textarea class="form-control" id="feedbackText" rows="4" placeholder="Please describe your feedback in detail..." required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="contactConsent">
+                                            <label class="form-check-label" for="contactConsent">
+                                                I'm OK with being contacted about this feedback
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3" id="emailField" style="display: none;">
+                                        <label for="contactEmail" class="form-label">Email (optional)</label>
+                                        <input type="email" class="form-control" id="contactEmail" placeholder="your@email.com">
+                                    </div>
+                                    <input type="hidden" id="pageUrl" value="${window.location.href}">
+                                    <input type="hidden" id="userAgent" value="${navigator.userAgent}">
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" id="submitFeedback">Submit Feedback</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                
+                // Add modal to body
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                
+                // Add trigger button to container
+                widgetContainer.appendChild(triggerButton);
+                
+                // Add container to body
+                document.body.appendChild(widgetContainer);
+                
+                // Set up event listeners
+                setupFeedbackEvents();
+            }
+            
+            // Set up the event listeners for the feedback widget
+            function setupFeedbackEvents() {
+                // Trigger button opens modal
+                document.getElementById('feedback-trigger').addEventListener('click', function() {
+                    const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+                    feedbackModal.show();
+                });
+                
+                // Show/hide email field based on consent checkbox
+                document.getElementById('contactConsent').addEventListener('change', function() {
+                    document.getElementById('emailField').style.display = this.checked ? 'block' : 'none';
+                });
+                
+                // Handle form submission
+                document.getElementById('submitFeedback').addEventListener('click', function() {
+                    submitFeedback();
+                });
+            }
+            
+            // Submit feedback to the server
+            function submitFeedback() {
+                const form = document.getElementById('feedbackForm');
+                
+                // Get selected rating
+                let rating = document.querySelector('input[name="rating"]:checked');
+                rating = rating ? rating.value : null;
+                
+                // Basic validation
+                const feedbackType = document.getElementById('feedbackType').value;
+                const feedbackText = document.getElementById('feedbackText').value;
+                
+                if (!feedbackType || !feedbackText) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+                
+                // Prepare data for submission
+                const feedbackData = {
+                    rating: rating,
+                    type: feedbackType,
+                    feedback: feedbackText,
+                    contact_consent: document.getElementById('contactConsent').checked,
+                    email: document.getElementById('contactEmail').value,
+                    page_url: document.getElementById('pageUrl').value,
+                    user_agent: document.getElementById('userAgent').value,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Send to server
+                fetch('/submit-feedback/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken() // Get CSRF token from cookies
+                    },
+                    body: JSON.stringify(feedbackData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Hide modal
+                    bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
+                    
+                    // Show success message
+                    showFeedbackSuccess();
+                    
+                    // Reset form
+                    form.reset();
+                    document.getElementById('emailField').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error submitting feedback:', error);
+                    alert('There was an error submitting your feedback. Please try again later.');
+                });
+            }
+            
+            // Show success message after submitting feedback
+            function showFeedbackSuccess() {
+                // Create toast notification
+                const toastHtml = `
+                <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+                    <div id="feedbackToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="fas fa-check-circle me-2"></i>Thank you for your feedback!
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                `;
+                
+                // Add toast to body if it doesn't exist
+                if (!document.getElementById('feedbackToast')) {
+                    document.body.insertAdjacentHTML('beforeend', toastHtml);
+                }
+                
+                // Show the toast
+                const toastEl = document.getElementById('feedbackToast');
+                const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                toast.show();
+            }
+            
+            // Helper function to get CSRF token from cookies
+            function getCsrfToken() {
+                const cookieValue = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('csrftoken='))
+                    ?.split('=')[1];
+                
+                return cookieValue || '';
+            }
+            
+            // Initialize the feedback widget when the DOM is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                createFeedbackWidget();
+            });
+            </script>
+    </div>
+</body>
+</html>

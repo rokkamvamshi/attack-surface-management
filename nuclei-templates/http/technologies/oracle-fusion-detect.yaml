@@ -1,0 +1,30 @@
+id: oracle-fusion-detect
+
+info:
+  name: Oracle Fusion Middleware - Detect
+  author: rxerium
+  severity: info
+  description: |
+    Oracle Fusion Middleware was detected.
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: http.html:"Welcome to Oracle Fusion Middleware"
+  tags: oracle,middleware,detect,tech
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "<title>Welcome to Oracle Fusion Middleware"
+
+      - type: status
+        status:
+          - 200
+# digest: 4a0a0047304502210087216494a5b9c7a0b6f419c7538a635b99424a119f92e8283b0257366de109d102202802c7fca3dcb4454e02611a68b84b06e7f8bf71f340571863a67917bbb14c2e:922c64590222798bb761d5b6d8e72950

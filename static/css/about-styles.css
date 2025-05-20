@@ -1,0 +1,141 @@
+/* General Page Styles */
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f8f8f8;
+    margin: 0;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    width: 100px;
+}
+
+.back-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+/* About Section */
+.about-section {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #fff;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.about-section p {
+    font-size: 1.2em;
+    color: #555;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Team Section */
+.team-section {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.team-section h2 {
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+.team-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.team-member {
+    max-width: 250px;
+    text-align: center;
+    margin: 20px;
+}
+
+.team-member img {
+    width: 100%;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.team-member h3 {
+    font-size: 1.4em;
+    color: #007BFF;
+}
+
+/* Animation Styles */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1.5s ease forwards;
+}
+
+.slide-up {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideUp 1.5s ease forwards;
+}
+
+.zoom-in {
+    transform: scale(0.8);
+    opacity: 0;
+    animation: zoomIn 1.5s ease forwards;
+}
+
+/* Keyframes for Animations */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+    
