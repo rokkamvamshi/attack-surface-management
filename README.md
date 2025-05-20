@@ -132,17 +132,28 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🎓 Academic Context
 
-This project was developed as part of [Course Name] at [University/College Name] to demonstrate skills in:
+This project was developed as part of Computer Science and Engineering (specialized in Cybersecurity) at Sree Vidyanikethan Engineering College, Tirupati. to demonstrate skills in:
 - Web application development
-- Database design
-- User interface design
+- Vulnerability Assessment
+- Scanning and Automation
 - Basic security concepts
 - API integration
 
 ## 🙏 Acknowledgements
 
+### Tools & Libraries
 - [Django](https://www.djangoproject.com/)
 - [Bootstrap](https://getbootstrap.com/)
 - [Font Awesome](https://fontawesome.com/)
 - [Subfinder](https://github.com/projectdiscovery/subfinder)
 - [Nuclei](https://github.com/projectdiscovery/nuclei)
+
+### Special Thanks
+I would like to express my sincere gratitude to my friend(s) who supported and played a crucial role in makeing this project:
+
+- **Muni Yaswanth Duvvuru** - for helping with **Backend Design**. Connect with him via [LinkedIn](linkedin.com/in/muni-yaswanth-duvvuru-520045297)
+
+### Project Team Members
+- **T. Lahari, J Kartheek, P Kavya and S Naveed** - for providing valuable feedback and testing
+
+Their encouragement, technical insights, and friendship were invaluable to the completion of this project.
