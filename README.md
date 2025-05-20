@@ -151,9 +151,9 @@ This project was developed as part of Computer Science and Engineering (speciali
 ### Special Thanks
 I would like to express my sincere gratitude to my friend(s) who supported and played a crucial role in makeing this project:
 
-- **Muni Yaswanth Duvvuru** - for helping with **Backend Design**. Connect with him via [LinkedIn](linkedin.com/in/muni-yaswanth-duvvuru-520045297)
+- **Muni Yaswanth Duvvuru** - for helping with **Backend Design**. Connect with him via [LinkedIn](https://linkedin.com/in/muni-yaswanth-duvvuru-520045297)
 
 ### Project Team Members
-- **T. Lahari, J Kartheek, P Kavya and S Naveed** - for providing valuable feedback and testing
+- **T Lahari, J Kartheek, P Kavya and S Naveed** - for providing valuable feedback and testing
 
 Their encouragement, technical insights, and friendship were invaluable to the completion of this project.
