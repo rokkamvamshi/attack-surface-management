@@ -13,7 +13,7 @@
 
 ASM (Attack Surface Management) is a Django-based web application designed to help identify and visualize the digital attack surface of an organization by discovering subdomains and scanning for common security vulnerabilities. This project was created to demonstrate practical web application development skills while exploring basic cybersecurity concepts.
 
-![Dashboard Screenshot](docs/images/dashboard.png)
+![Dashboard Screenshot](images/ASM.png)
 
 ## ✨ Features
 
