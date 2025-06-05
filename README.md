@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/License-MIT-orange" alt="License MIT"/>
 </div>
 
-> **⚠️ DISCLAIMER:** This is a college project built for educational purposes and is not intended for production use. The application may have security vulnerabilities, performance limitations, and lacks many features needed for a production-grade tool.
+> **⚠️ DISCLAIMER:** This is a college project built for educational purposes and is not intended for production use. The application may have security vulnerabilities, performance limitations, and lack many features needed for a production-grade tool. If you are searching for a college project, then this should help you. Just download, run it up, and Done! 
 
 ## 📝 Overview
 
@@ -154,11 +154,6 @@ This project was developed as part of Computer Science and Engineering (speciali
 - [Nuclei](https://github.com/projectdiscovery/nuclei)
 
 ### Special Thanks
-I would like to express my sincere gratitude to my friend(s) who supported and played a crucial role in makeing this project:
+I would like to express my sincere gratitude to my friend(s) who supported and played a crucial role in making this project:
 
 - **Muni Yaswanth Duvvuru** - for helping with **Backend Design**. Connect with him via [LinkedIn](https://linkedin.com/in/muni-yaswanth-duvvuru-520045297)
-
-### Project Team Members
-- **T Lahari, J Kartheek, P Kavya and S Naveed** - for providing valuable feedback and testing
-
-Their encouragement, technical insights, and friendship were invaluable to the completion of this project.
